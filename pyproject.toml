@@ -12,6 +12,7 @@ python = "^3.9"
 torch = "1.12.1"
 numpy = "^1.23.5"
 nltk = "^3.8"
+wandb = "^0.13.6"
 
 [tool.poetry.group.dev.dependencies]
 unittest = "^0.0"
