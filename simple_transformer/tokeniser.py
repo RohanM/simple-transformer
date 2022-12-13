@@ -2,28 +2,27 @@ from nltk.tokenize import wordpunct_tokenize
 from nltk.corpus import words
 
 class Tokeniser:
-    dictionary: list[str]
+    word_by_idx: list[str]
+    idx_by_word: dict[str, int]
 
     NO_TOKEN = -1
     PUNCTUATION = [".", ",", "!", "?", ":", ";", "(", ")", "[", "]", "{", "}", "'", '"', "-", "_", "/", "\\"]
 
     def __init__(self) -> None:
-        self.dictionary = words.words() + self.PUNCTUATION
+        self.word_by_idx = words.words() + self.PUNCTUATION
+        self.idx_by_word = { w: i for i, w in enumerate(self.word_by_idx) }
 
     def encode(self, text: str) -> list[int]:
         return [self.token_for(w) for w in wordpunct_tokenize(text)]
 
     def decode(self, tokens: list[int]) -> str:
-        return self.join_words([self.dictionary[t] for t in tokens])
+        return self.join_words([self.word_by_idx[t] for t in tokens])
 
     def vocab_size(self) -> int:
-        return len(self.dictionary)
+        return len(self.word_by_idx)
 
     def token_for(self, word: str) -> int:
-        try:
-            return self.dictionary.index(word.lower())
-        except ValueError:
-            return self.NO_TOKEN
+        return self.idx_by_word.get(word.lower(), self.NO_TOKEN)
 
     def join_words(self, words: list[str]) -> str:
         """Join words with spaces between words, and no spaces before punctuation."""
