@@ -6,6 +6,3 @@ class TestLM(TestCase):
     def test_lm(self) -> None:
         lm = LM()
         self.assertEqual(lm.query('Hello, world!'), 'Nice world.')
-
-if __name__ == '__main__':
-    unittest.main()
