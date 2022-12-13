@@ -26,6 +26,9 @@ test = "scripts:test"
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+[tool.mypy]
+strict = true
+
 [[tool.mypy.overrides]]
 module = "nltk.tokenize"
 ignore_missing_imports = true

@@ -1,6 +1,6 @@
 import subprocess
 
-def types():
+def types() -> None:
     """
     Check types with mypy. Equivalent to:
     `poetry run mypy .`
@@ -9,7 +9,7 @@ def types():
        ['poetry', 'run', 'mypy', '.']
     )
 
-def test():
+def test() -> None:
     """
     Run all unit tests. Equivalent to:
     `poetry run python -m unittest discover`
