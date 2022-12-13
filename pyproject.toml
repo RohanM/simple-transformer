@@ -30,9 +30,5 @@ build-backend = "poetry.core.masonry.api"
 strict = true
 
 [[tool.mypy.overrides]]
-module = "nltk.tokenize"
-ignore_missing_imports = true
-
-[[tool.mypy.overrides]]
-module = "nltk.corpus"
+module = "nltk"
 ignore_missing_imports = true
