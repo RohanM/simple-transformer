@@ -5,6 +5,9 @@ from simple_transformer.tokeniser import Tokeniser
 from simple_transformer.model import Model
 
 class LM:
+    tokeniser: Tokeniser
+    model: Model
+
     NUM_EMBEDDINGS = 512
 
     def __init__(self) -> None:

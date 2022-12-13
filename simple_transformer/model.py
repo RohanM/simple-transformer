@@ -2,6 +2,9 @@ import torch
 from torch import nn, Tensor
 
 class Model(nn.Module):
+    embedding: nn.Embedding
+    transformer: nn.Transformer
+
     def __init__(self, num_embeddings: int, embedding_dim: int) -> None:
         super(Model, self).__init__()
         self.embedding = nn.Embedding(num_embeddings, embedding_dim)

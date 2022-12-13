@@ -1,8 +1,9 @@
 from nltk.tokenize import wordpunct_tokenize
 from nltk.corpus import words
-from typing import cast
 
 class Tokeniser:
+    dictionary: list[str]
+
     NO_TOKEN = -1
     PUNCTUATION = [".", ",", "!", "?", ":", ";", "(", ")", "[", "]", "{", "}", "'", '"', "-", "_", "/", "\\"]
 
@@ -20,7 +21,7 @@ class Tokeniser:
 
     def token_for(self, word: str) -> int:
         try:
-            return cast(int, self.dictionary.index(word.lower()))
+            return self.dictionary.index(word.lower())
         except ValueError:
             return self.NO_TOKEN
 
