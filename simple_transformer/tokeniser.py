@@ -15,6 +15,9 @@ class Tokeniser:
     def decode(self, tokens: list[int]) -> str:
         return self.join_words([self.dictionary[t] for t in tokens])
 
+    def vocab_size(self) -> int:
+        return len(self.dictionary)
+
     def token_for(self, word: str) -> int:
         try:
             return cast(int, self.dictionary.index(word.lower()))

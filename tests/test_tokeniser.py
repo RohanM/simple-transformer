@@ -21,5 +21,8 @@ class TestTokeniser(TestCase):
     def test_encode_unknown_token(self) -> None:
         self.assertEqual(self.tokeniser.encode("xyzzy"), [-1])
 
+    def test_vocab_size(self) -> None:
+        self.assertEqual(self.tokeniser.vocab_size(), 236754)
+
     def test_join_words(self) -> None:
         self.assertEqual(self.tokeniser.join_words(["hello", "world", "!"]), "hello world!")
