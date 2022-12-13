@@ -13,10 +13,10 @@ class TestTokeniser(TestCase):
         )
 
     def test_encode(self) -> None:
-        self.assertEqual(self.tokeniser.encode("Hello world!"), [83713, 233449, 236738])
+        self.assertEqual(self.tokeniser.encode("Hello world!"), [99078, 234772, 236738])
 
     def test_decode(self) -> None:
-        self.assertEqual(self.tokeniser.decode([83713, 233449, 236738]), "hello world!")
+        self.assertEqual(self.tokeniser.decode([99078, 234772, 236738]), "hello world!")
 
     def test_encode_unknown_token(self) -> None:
         self.assertEqual(self.tokeniser.encode("xyzzy"), [-1])

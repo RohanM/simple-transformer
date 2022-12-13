@@ -9,7 +9,7 @@ class Tokeniser:
     PUNCTUATION = [".", ",", "!", "?", ":", ";", "(", ")", "[", "]", "{", "}", "'", '"', "-", "_", "/", "\\"]
 
     def __init__(self) -> None:
-        self.word_by_idx = words.words() + self.PUNCTUATION
+        self.word_by_idx = sorted(words.words()) + self.PUNCTUATION
         self.idx_by_word = { w: i for i, w in enumerate(self.word_by_idx) }
 
     def encode(self, text: str) -> list[int]:
