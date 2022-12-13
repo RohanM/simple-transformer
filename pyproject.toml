@@ -13,6 +13,7 @@ torch = "1.12.1"
 numpy = "^1.23.5"
 nltk = "^3.8"
 wandb = "^0.13.6"
+argparse = "^1.4.0"
 
 [tool.poetry.group.dev.dependencies]
 unittest = "^0.0"
