@@ -8,11 +8,14 @@ class LM:
     tokeniser: Tokeniser
     model: Model
 
-    NUM_EMBEDDINGS = 512
+    NUM_EMBEDDINGS = 256
 
-    def __init__(self) -> None:
+    def __init__(self, filename: str = None) -> None:
         self.tokeniser = Tokeniser()
         self.model = Model(self.tokeniser.vocab_size(), self.NUM_EMBEDDINGS)
+        if filename is not None:
+            self.model.load(filename)
+            self.model.eval()
 
     def query(self, prompt: str) -> str:
         tokens = self.tokeniser.encode(prompt)
