@@ -42,3 +42,8 @@ class Model(nn.Module):
             'transformer': self.transformer.state_dict(),
         }
         torch.save(state, filename)
+
+    def load(self, filename: str = 'model.pt') -> None:
+        state = torch.load(filename)
+        self.embedding.load_state_dict(state['embedding'])
+        self.transformer.load_state_dict(state['transformer'])
