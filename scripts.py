@@ -1,5 +1,11 @@
 import subprocess
 
+def train() -> None:
+    """Train the model."""
+    subprocess.run(
+       ['poetry', 'run', 'python', 'train.py']
+    )
+
 def types() -> None:
     """
     Check types with mypy. Equivalent to:

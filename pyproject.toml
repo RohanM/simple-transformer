@@ -21,6 +21,7 @@ jupyter = "^1.0.0"
 mypy = "^0.991"
 
 [tool.poetry.scripts]
+train = "scripts:train"
 types = "scripts:types"
 test = "scripts:test"
 
