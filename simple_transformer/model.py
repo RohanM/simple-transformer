@@ -35,3 +35,10 @@ class Model(nn.Module):
         distances = torch.linalg.norm(self.embedding.weight - x.unsqueeze(2), dim=3)
         idxs = torch.argmin(distances, dim=2)
         return idxs
+
+    def save(self, filename: str = 'model.pt') -> None:
+        state = {
+            'embedding': self.embedding.state_dict(),
+            'transformer': self.transformer.state_dict(),
+        }
+        torch.save(state, filename)
