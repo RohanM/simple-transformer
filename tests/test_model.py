@@ -8,7 +8,7 @@ class TestModel(TestCase):
     def test_model(self) -> None:
         model = Model(4, 8)
         result = model(LongTensor([[0, 1, 2, 3], [1, 2, 3, 0]]))
-        self.assertEqual(result.shape, torch.Size([2, 4]))
+        self.assertEqual(result.shape, torch.Size([2, 4, 8]))
 
     def test_reverse_embedding(self) -> None:
         model = Model(4, 8)

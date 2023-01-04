@@ -21,7 +21,7 @@ class Model(nn.Module):
     def forward(self, x: Tensor) -> Tensor:
         x = self.embedding(x)
         x = self.transformer(x, x)
-        return self.reverse_embedding(x)
+        return x
 
     def reverse_embedding(self, x: Tensor) -> Tensor:
         distances = torch.linalg.norm(self.embedding.weight - x.unsqueeze(2), dim=3)

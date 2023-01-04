@@ -18,5 +18,6 @@ class LM:
         tokens = self.tokeniser.encode(prompt)
         tokens_t = LongTensor(tokens).unsqueeze(0)
         output_t = self.model(tokens_t)
+        output_t = self.model.reverse_embedding(output_t)
         output = output_t.squeeze().tolist()
         return self.tokeniser.decode(output)
