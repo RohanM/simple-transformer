@@ -1,5 +1,7 @@
 import torch
 from torch import nn, Tensor
+import torch.nn.functional as F
+
 
 class Model(nn.Module):
     embedding: nn.Embedding
@@ -22,6 +24,12 @@ class Model(nn.Module):
         x = self.embedding(x)
         x = self.transformer(x, x)
         return x
+
+    def loss(self, y_hat: Tensor, y: Tensor) -> Tensor:
+        return F.mse_loss(y_hat, y)
+
+    def embed(self, x: Tensor) -> Tensor:
+        return self.embedding(x)
 
     def reverse_embedding(self, x: Tensor) -> Tensor:
         distances = torch.linalg.norm(self.embedding.weight - x.unsqueeze(2), dim=3)
