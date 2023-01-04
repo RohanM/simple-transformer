@@ -13,16 +13,19 @@ class TestTokeniser(TestCase):
         )
 
     def test_encode(self) -> None:
-        self.assertEqual(self.tokeniser.encode("Hello world!"), [99078, 234772, 236738])
+        self.assertEqual(self.tokeniser.encode("Hello world!"), [99079, 234773, 236739])
 
     def test_decode(self) -> None:
-        self.assertEqual(self.tokeniser.decode([99078, 234772, 236738]), "hello world!")
+        self.assertEqual(self.tokeniser.decode([99079, 234773, 236739]), "hello world!")
 
     def test_encode_unknown_token(self) -> None:
-        self.assertEqual(self.tokeniser.encode("xyzzy"), [-1])
+        self.assertEqual(self.tokeniser.encode("xyzzy"), [0])
+
+    def test_decode_unknown_token(self) -> None:
+        self.assertEqual(self.tokeniser.decode([0]), "<unknown>")
 
     def test_vocab_size(self) -> None:
-        self.assertEqual(self.tokeniser.vocab_size(), 236754)
+        self.assertEqual(self.tokeniser.vocab_size(), 236755)
 
     def test_join_words(self) -> None:
         self.assertEqual(self.tokeniser.join_words(["hello", "world", "!"]), "hello world!")

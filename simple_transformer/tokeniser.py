@@ -5,11 +5,12 @@ class Tokeniser:
     word_by_idx: list[str]
     idx_by_word: dict[str, int]
 
-    NO_TOKEN = -1
+    NO_TOKEN = 0
+    NO_TOKEN_STR = "<unknown>"
     PUNCTUATION = [".", ",", "!", "?", ":", ";", "(", ")", "[", "]", "{", "}", "'", '"', "-", "_", "/", "\\"]
 
     def __init__(self) -> None:
-        self.word_by_idx = sorted(words.words()) + self.PUNCTUATION
+        self.word_by_idx = [self.NO_TOKEN_STR] + sorted(words.words()) + self.PUNCTUATION
         self.idx_by_word = { w: i for i, w in enumerate(self.word_by_idx) }
 
     def encode(self, text: str) -> list[int]:
