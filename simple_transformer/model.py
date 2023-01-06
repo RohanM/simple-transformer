@@ -28,6 +28,9 @@ class Model(nn.Module):
     def loss(self, y_hat: Tensor, y: Tensor) -> Tensor:
         return F.mse_loss(y_hat, y)
 
+    def infer_one(self, x: Tensor) -> Tensor:
+        return self.reverse_embedding(self(x).unsqueeze(0)).squeeze()[-1:]
+
     def embed(self, x: Tensor) -> Tensor:
         return self.embedding(x)
 

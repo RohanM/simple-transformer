@@ -23,6 +23,12 @@ class TestModel(TestCase):
         )
         self.assertEqual(result, 0)
 
+    def test_infer_one(self) -> None:
+        model = Model(4, 8)
+        x = LongTensor([0, 1, 2, 3])
+        result = model.infer_one(x)
+        self.assertEqual(result.shape, torch.Size((1,)))
+
     def test_embed(self) -> None:
         model = Model(4, 8)
         x = LongTensor([0, 1, 2, 3])
