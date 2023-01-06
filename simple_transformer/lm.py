@@ -17,10 +17,17 @@ class LM:
             self.model.load(filename)
             self.model.eval()
 
-    def query(self, prompt: str) -> str:
+    def query(self, prompt: str, response_len: int = 100) -> str:
         tokens = self.tokeniser.encode(prompt)
-        tokens_t = LongTensor(tokens).unsqueeze(0)
-        output_t = self.model(tokens_t)
-        output_t = self.model.reverse_embedding(output_t)
-        output = output_t.squeeze().tolist()
-        return self.tokeniser.decode(output)
+        tokens_t = LongTensor(tokens)
+        for _ in range(response_len):
+            output = self.model.infer_one(tokens_t)
+            tokens = tokens[1:] + [output.item()]
+            tokens_t = LongTensor(tokens)
+        return self.tokeniser.decode(tokens)
+
+    def query_one_token(self, prompt: str) -> str:
+        tokens = self.tokeniser.encode(prompt)
+        tokens_t = LongTensor(tokens)
+        output = self.model.infer_one(tokens_t)
+        return self.tokeniser.decode(output.tolist())
