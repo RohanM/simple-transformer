@@ -3,7 +3,7 @@ import random
 import numpy as np
 import torch
 from simple_transformer.trainer import Trainer
-from simple_transformer.bigram_model import BigramModel
+from simple_transformer.transformer_model import TransformerModel
 from simple_transformer.data import Data
 from simple_transformer.letter_tokeniser import LetterTokeniser as Tokeniser
 import argparse
@@ -44,7 +44,7 @@ print(f'Preparing data...')
 data_train = Data(text_train, args.context_size)
 data_valid = Data(text_valid, args.context_size)
 
-model = BigramModel(Tokeniser().vocab_size())
+model = TransformerModel(Tokeniser().vocab_size(), args.context_size, args.embedding_dim)
 model = model.to(device)
 
 print('Training...')

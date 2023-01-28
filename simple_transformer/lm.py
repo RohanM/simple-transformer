@@ -3,25 +3,29 @@ from torch import tensor
 from typing import Optional
 
 from simple_transformer.letter_tokeniser import LetterTokeniser as Tokeniser
-from simple_transformer.bigram_model import BigramModel
+from simple_transformer.transformer_model import TransformerModel
 
 class LM:
     tokeniser: Tokeniser
-    model: BigramModel
+    model: TransformerModel
 
     NUM_EMBEDDINGS = 256
+    CONTEXT_SIZE = 8
 
     def __init__(self, filename: Optional[str] = None) -> None:
         self.tokeniser = Tokeniser()
-        self.model = BigramModel(self.tokeniser.vocab_size())
+        self.model = TransformerModel(self.tokeniser.vocab_size(), self.CONTEXT_SIZE, self.NUM_EMBEDDINGS)
         if filename is not None:
            self.model.load(filename)
            self.model.eval()
         pass
 
     def query(self, prompt: str, response_len: int = 100) -> str:
+        if prompt == '':
+            raise ValueError('Prompt cannot be empty')
+
         tokens = tensor(self.tokeniser.encode(prompt), dtype=torch.long)
         for _ in range(response_len):
-           output = self.model.infer_one(tokens)
-           tokens = torch.cat((tokens, output))
+            output = self.model.infer_one(tokens[-self.CONTEXT_SIZE:])
+            tokens = torch.cat((tokens, output))
         return self.tokeniser.decode(tokens.tolist())
