@@ -18,7 +18,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--truncate-input', type=int, default=None)
     parser.add_argument('--window-size', type=int, default=64)
     parser.add_argument('--embedding-dim', type=int, default=256)
-    parser.add_argument('--lr', type=float, default=0.001)
+    parser.add_argument('--lr', type=float, default=1e-3)
     parser.add_argument('--batch-size', type=int, default=64)
     parser.add_argument('--epochs', type=int, default=1)
     return parser.parse_args()
