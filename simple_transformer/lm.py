@@ -1,5 +1,6 @@
 import torch
 from torch import LongTensor
+from typing import Optional
 
 from simple_transformer.tokeniser import Tokeniser
 from simple_transformer.model import Model
@@ -10,7 +11,7 @@ class LM:
 
     NUM_EMBEDDINGS = 256
 
-    def __init__(self, filename: str = None) -> None:
+    def __init__(self, filename: Optional[str] = None) -> None:
         self.tokeniser = Tokeniser()
         self.model = Model(self.tokeniser.vocab_size(), self.NUM_EMBEDDINGS)
         if filename is not None:

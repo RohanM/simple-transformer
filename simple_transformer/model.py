@@ -1,7 +1,7 @@
 import torch
 from torch import nn, Tensor
 import torch.nn.functional as F
-
+from typing import cast
 
 class Model(nn.Module):
     embedding: nn.Embedding
