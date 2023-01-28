@@ -1,7 +1,7 @@
 from nltk.tokenize import wordpunct_tokenize
 from nltk.corpus import words
 
-class Tokeniser:
+class WordTokeniser:
     word_by_idx: list[str]
     idx_by_word: dict[str, int]
 

@@ -1,7 +1,7 @@
 import nltk
 from torch import tensor, Tensor
 from torch.utils.data import Dataset
-from simple_transformer.tokeniser import Tokeniser
+from simple_transformer.word_tokeniser import WordTokeniser as Tokeniser
 from typing import Iterator
 
 class Data(Dataset[tuple[Tensor, Tensor]]):

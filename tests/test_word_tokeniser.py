@@ -1,10 +1,10 @@
 import unittest
 from unittest import TestCase
-from simple_transformer.tokeniser import Tokeniser
+from simple_transformer.word_tokeniser import WordTokeniser
 
-class TestTokeniser(TestCase):
+class TestWordTokeniser(TestCase):
     def setUp(self) -> None:
-        self.tokeniser = Tokeniser()
+        self.tokeniser = WordTokeniser()
 
     def test_roundtrip(self) -> None:
         self.assertEqual(

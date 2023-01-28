@@ -2,7 +2,7 @@ import torch
 from torch import LongTensor
 from typing import Optional
 
-from simple_transformer.tokeniser import Tokeniser
+from simple_transformer.word_tokeniser import WordTokeniser as Tokeniser
 from simple_transformer.model import Model
 
 class LM:
