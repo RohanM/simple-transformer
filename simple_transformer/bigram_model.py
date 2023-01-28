@@ -3,11 +3,11 @@ from torch import nn, Tensor
 import torch.nn.functional as F
 from typing import cast, Optional, Tuple
 
-class Model(nn.Module):
+class BigramModel(nn.Module):
     embedding: nn.Embedding
 
     def __init__(self, num_embeddings: int) -> None:
-        super(Model, self).__init__()
+        super(BigramModel, self).__init__()
         self.embedding = nn.Embedding(num_embeddings, num_embeddings)
 
     def forward(self, x: Tensor, target: Optional[Tensor] = None) -> Tuple[Tensor, Optional[Tensor]]:

@@ -1,18 +1,18 @@
 import torch
 from torch import optim
 from torch.utils.data import DataLoader
-from simple_transformer.model import Model
+from simple_transformer.bigram_model import BigramModel
 from simple_transformer.data import Data
 import wandb
 from typing import Any
 
 class Trainer:
-    model: Model
+    model: BigramModel
     optimiser: optim.Optimizer
     wandb: Any
     bs: int
 
-    def __init__(self, model: Model, wandb: Any, lr: float = 1e-3, bs: int = 64) -> None:
+    def __init__(self, model: BigramModel, wandb: Any, lr: float = 1e-3, bs: int = 64) -> None:
         self.model = model
         self.optimiser = optim.AdamW(model.parameters(), lr=lr)
         self.wandb = wandb

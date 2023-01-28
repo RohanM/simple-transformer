@@ -3,17 +3,17 @@ from torch import tensor
 from typing import Optional
 
 from simple_transformer.letter_tokeniser import LetterTokeniser as Tokeniser
-from simple_transformer.model import Model
+from simple_transformer.bigram_model import BigramModel
 
 class LM:
     tokeniser: Tokeniser
-    model: Model
+    model: BigramModel
 
     NUM_EMBEDDINGS = 256
 
     def __init__(self, filename: Optional[str] = None) -> None:
         self.tokeniser = Tokeniser()
-        self.model = Model(self.tokeniser.vocab_size())
+        self.model = BigramModel(self.tokeniser.vocab_size())
         if filename is not None:
            self.model.load(filename)
            self.model.eval()
