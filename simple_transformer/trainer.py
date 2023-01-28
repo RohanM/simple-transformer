@@ -13,7 +13,7 @@ class Trainer:
 
     def __init__(self, model: Model, wandb: Any, lr: float = 1e-3, bs: int = 64) -> None:
         self.model = model
-        self.optimiser = optim.Adam(model.parameters(), lr=lr)
+        self.optimiser = optim.AdamW(model.parameters(), lr=lr)
         self.wandb = wandb
         self.bs = bs
 
