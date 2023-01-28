@@ -1,3 +1,4 @@
+import torch
 from torch import optim
 from torch.utils.data import DataLoader
 from simple_transformer.model import Model
@@ -17,14 +18,27 @@ class Trainer:
         self.wandb = wandb
         self.bs = bs
 
-    def train(self, num_epochs: int, data: Data) -> None:
-        data_loader = DataLoader(data, batch_size=self.bs, shuffle=True)
-        self.model.train()
+    def train(self, num_epochs: int, data_train: Data, data_valid: Data) -> None:
+        dl_train = DataLoader(data_train, batch_size=self.bs, shuffle=True)
+        dl_valid = DataLoader(data_valid, batch_size=self.bs, shuffle=False)
+
         for epoch in range(num_epochs):
-            for x, y in data_loader:
-                self.optimiser.zero_grad()
+            # -- Train
+            self.model.train()
+            losses = torch.zeros(len(dl_train))
+            for i, (x, y) in enumerate(dl_train):
                 y_hat, loss = self.model(x, y)
+                self.optimiser.zero_grad()
                 loss.backward()
                 self.optimiser.step()
-            self.wandb.log({ "loss": loss.item() })
-            print(loss)
+                losses[i] = loss.item()
+            self.wandb.log({ "loss/train": losses.mean() })
+
+            # -- Eval
+            self.model.eval()
+            losses = torch.zeros(len(dl_valid))
+            with torch.no_grad():
+                for i, (x, y) in enumerate(dl_valid):
+                    y_hat, loss = self.model(x, y)
+                    losses[i] = loss.item()
+                self.wandb.log({ "loss/valid": losses.mean() })

@@ -36,8 +36,14 @@ text = nltk.corpus.gutenberg.raw('austen-emma.txt')
 if args.truncate_input is not None:
     text = text[:args.truncate_input]
 
+split = int(len(text) * 0.8)
+text_train = text[:split]
+text_valid = text[split:]
+
 print(f'Preparing data...')
-data = Data(text, args.window_size)
+data_train = Data(text_train, args.window_size)
+data_valid = Data(text_valid, args.window_size)
+
 model = Model(Tokeniser().vocab_size())
 model = model.to(device)
 
@@ -52,11 +58,15 @@ wandb.init(
         'seed': args.seed,
         'num_epochs': args.epochs,
         'lr': args.lr,
+        'window_size': args.window_size,
+        'truncate_input': args.truncate_input,
+        'batch_size': args.batch_size,
+        'embedding_dim': args.embedding_dim,
     }
 )
 wandb.watch(model)
 
 trainer = Trainer(model, wandb, lr=args.lr, bs=args.batch_size)
-trainer.train(args.epochs, data)
+trainer.train(args.epochs, data_train, data_valid)
 
 model.save('model.pt')
