@@ -9,6 +9,8 @@ from simple_transformer.letter_tokeniser import LetterTokeniser as Tokeniser
 import argparse
 import wandb
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument('--track', action='store_true')
@@ -37,6 +39,7 @@ if args.truncate_input is not None:
 print(f'Preparing data...')
 data = Data(text, args.window_size)
 model = Model(Tokeniser().vocab_size())
+model = model.to(device)
 
 print('Training...')
 

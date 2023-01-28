@@ -1,15 +1,18 @@
 import nltk
+import torch
 from torch import tensor, Tensor
 from torch.utils.data import Dataset
 from simple_transformer.letter_tokeniser import LetterTokeniser as Tokeniser
 from typing import Iterator
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 class Data(Dataset[tuple[Tensor, Tensor]]):
     windows: list[Tensor]
 
     def __init__(self, text: str, window_size: int) -> None:
         tokens = Tokeniser().encode(text)
-        self.windows = [tensor(ngram) for ngram in nltk.ngrams(tokens, window_size)]
+        self.windows = [tensor(ngram).to(device=device) for ngram in nltk.ngrams(tokens, window_size)]
 
     def __len__(self) -> int:
         return len(self.windows) - 1
