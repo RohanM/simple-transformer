@@ -18,7 +18,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--tags', type=str, default=None)
     parser.add_argument('--seed', type=int, default=1)
     parser.add_argument('--truncate-input', type=int, default=None)
-    parser.add_argument('--window-size', type=int, default=8)
+    parser.add_argument('--context-size', type=int, default=8)
     parser.add_argument('--embedding-dim', type=int, default=256)
     parser.add_argument('--lr', type=float, default=1e-3)
     parser.add_argument('--batch-size', type=int, default=64)
@@ -41,8 +41,8 @@ text_train = text[:split]
 text_valid = text[split:]
 
 print(f'Preparing data...')
-data_train = Data(text_train, args.window_size)
-data_valid = Data(text_valid, args.window_size)
+data_train = Data(text_train, args.context_size)
+data_valid = Data(text_valid, args.context_size)
 
 model = BigramModel(Tokeniser().vocab_size())
 model = model.to(device)
@@ -58,7 +58,7 @@ wandb.init(
         'seed': args.seed,
         'num_epochs': args.epochs,
         'lr': args.lr,
-        'window_size': args.window_size,
+        'context_size': args.context_size,
         'truncate_input': args.truncate_input,
         'batch_size': args.batch_size,
         'embedding_dim': args.embedding_dim,
