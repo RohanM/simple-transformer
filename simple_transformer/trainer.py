@@ -23,10 +23,8 @@ class Trainer:
         for epoch in range(num_epochs):
             for x, y in data_loader:
                 self.optimiser.zero_grad()
-                y_hat = self.model(x)
-                y = self.model.embed(y)
-                loss = self.model.loss(y_hat, y)
-                loss.backward() # type: ignore
+                y_hat, loss = self.model(x, y)
+                loss.backward()
                 self.optimiser.step()
             self.wandb.log({ "loss": loss.item() })
             print(loss)

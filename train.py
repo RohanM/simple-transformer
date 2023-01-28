@@ -36,7 +36,7 @@ if args.truncate_input is not None:
 
 print(f'Preparing data...')
 data = Data(text, args.window_size)
-model = Model(Tokeniser().vocab_size(), args.embedding_dim)
+model = Model(Tokeniser().vocab_size())
 
 print('Training...')
 

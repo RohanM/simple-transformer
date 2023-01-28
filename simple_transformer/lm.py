@@ -1,8 +1,8 @@
 import torch
-from torch import LongTensor
+from torch import tensor
 from typing import Optional
 
-from simple_transformer.word_tokeniser import WordTokeniser as Tokeniser
+from simple_transformer.letter_tokeniser import LetterTokeniser as Tokeniser
 from simple_transformer.model import Model
 
 class LM:
@@ -13,22 +13,15 @@ class LM:
 
     def __init__(self, filename: Optional[str] = None) -> None:
         self.tokeniser = Tokeniser()
-        self.model = Model(self.tokeniser.vocab_size(), self.NUM_EMBEDDINGS)
+        self.model = Model(self.tokeniser.vocab_size())
         if filename is not None:
-            self.model.load(filename)
-            self.model.eval()
+           self.model.load(filename)
+           self.model.eval()
+        pass
 
     def query(self, prompt: str, response_len: int = 100) -> str:
-        tokens = self.tokeniser.encode(prompt)
-        tokens_t = LongTensor(tokens)
+        tokens = tensor(self.tokeniser.encode(prompt), dtype=torch.long)
         for _ in range(response_len):
-            output = self.model.infer_one(tokens_t)
-            tokens = tokens[1:] + [output.item()]
-            tokens_t = LongTensor(tokens)
-        return self.tokeniser.decode(tokens)
-
-    def query_one_token(self, prompt: str) -> str:
-        tokens = self.tokeniser.encode(prompt)
-        tokens_t = LongTensor(tokens)
-        output = self.model.infer_one(tokens_t)
-        return self.tokeniser.decode(output.tolist())
+           output = self.model.infer_one(tokens)
+           tokens = torch.cat((tokens, output))
+        return self.tokeniser.decode(tokens.tolist())
