@@ -5,7 +5,7 @@ import torch
 from simple_transformer.trainer import Trainer
 from simple_transformer.model import Model
 from simple_transformer.data import Data
-from simple_transformer.word_tokeniser import WordTokeniser as Tokeniser
+from simple_transformer.letter_tokeniser import LetterTokeniser as Tokeniser
 import argparse
 import wandb
 
