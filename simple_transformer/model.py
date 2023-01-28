@@ -11,14 +11,14 @@ class Model(nn.Module):
         self.embedding = nn.Embedding(num_embeddings, num_embeddings)
 
     def forward(self, x: Tensor, target: Optional[Tensor] = None) -> Tuple[Tensor, Optional[Tensor]]:
-        x = self.embedding(x)
+        logits = self.embedding(x)
 
         loss = None
         if target is not None:
-            b, t, c = x.shape
-            loss = F.cross_entropy(x.view(b, c, t), target)
+            b, t, c = logits.shape
+            loss = F.cross_entropy(logits.view(b*t, c), target.view(b*t))
 
-        return x, loss
+        return logits, loss
 
     def infer_one(self, x: Tensor) -> Tensor:
         logits, _ = self(x)

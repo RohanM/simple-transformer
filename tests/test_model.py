@@ -14,7 +14,7 @@ class TestModel(TestCase):
         model = Model(4)
         _, loss = model(
             tensor([[0, 1], [1, 2]], dtype=torch.long),
-            tensor([[1, 0, 0, 0], [0, 1, 0, 0]], dtype=torch.long),
+            tensor([[0, 1], [1, 2]], dtype=torch.long),
         )
         self.assertTrue(loss.item() > 0)
 
