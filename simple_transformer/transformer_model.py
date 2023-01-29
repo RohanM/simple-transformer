@@ -11,9 +11,9 @@ class Head(nn.Module):
 
     def __init__(self, context_size: int, num_embeddings: int, head_size: int) -> None:
         super().__init__()
-        self.key = nn.Linear(num_embeddings, head_size)
-        self.query = nn.Linear(num_embeddings, head_size)
-        self.value = nn.Linear(num_embeddings, head_size)
+        self.key = nn.Linear(num_embeddings, head_size, bias=False)
+        self.query = nn.Linear(num_embeddings, head_size, bias=False)
+        self.value = nn.Linear(num_embeddings, head_size, bias=False)
         self.register_buffer('mask', torch.tril(torch.ones(context_size, context_size)))
 
     def forward(self, x: Tensor) -> Tensor:
