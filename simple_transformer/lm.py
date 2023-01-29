@@ -19,8 +19,7 @@ class LM:
         self.model = TransformerModel(self.tokeniser.vocab_size(), self.CONTEXT_SIZE, self.NUM_EMBEDDINGS, self.NUM_HEADS, self.NUM_BLOCKS, 0)
         if filename is not None:
            self.model.load(filename)
-           self.model.eval()
-        pass
+        self.model.eval()
 
     def query(self, prompt: str, response_len: int = 100) -> str:
         if prompt == '':
