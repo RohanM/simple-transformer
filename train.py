@@ -21,9 +21,10 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--context-size', type=int, default=8)
     parser.add_argument('--embedding-dim', type=int, default=32)
     parser.add_argument('--num-heads', type=int, default=4)
+    parser.add_argument('--num-blocks', type=int, default=3)
     parser.add_argument('--lr', type=float, default=1e-3)
     parser.add_argument('--batch-size', type=int, default=64)
-    parser.add_argument('--epochs', type=int, default=1000)
+    parser.add_argument('--epochs', type=int, default=200)
     return parser.parse_args()
 
 args = parse_args()
@@ -45,7 +46,7 @@ print(f'Preparing data...')
 data_train = Data(text_train, args.context_size)
 data_valid = Data(text_valid, args.context_size)
 
-model = TransformerModel(Tokeniser().vocab_size(), args.context_size, args.embedding_dim, args.num_heads)
+model = TransformerModel(Tokeniser().vocab_size(), args.context_size, args.embedding_dim, args.num_heads, args.num_blocks)
 model = model.to(device)
 
 print('Training...')
@@ -63,6 +64,8 @@ wandb.init(
         'truncate_input': args.truncate_input,
         'batch_size': args.batch_size,
         'embedding_dim': args.embedding_dim,
+        'num_heads': args.num_heads,
+        'num_blocks': args.num_blocks,
     }
 )
 wandb.watch(model)

@@ -6,7 +6,7 @@ from simple_transformer.transformer_model import TransformerModel
 
 class TestTransformerModel(TestCase):
     def setUp(self) -> None:
-        self.model = TransformerModel(4, 4, 8, 2)
+        self.model = TransformerModel(4, 4, 8, 2, 2)
 
     def test_model(self) -> None:
         y, _ = self.model(LongTensor([[0, 1], [1, 2]]))

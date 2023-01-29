@@ -12,10 +12,11 @@ class LM:
     NUM_EMBEDDINGS = 32
     CONTEXT_SIZE = 8
     NUM_HEADS = 4
+    NUM_BLOCKS = 3
 
     def __init__(self, filename: Optional[str] = None) -> None:
         self.tokeniser = Tokeniser()
-        self.model = TransformerModel(self.tokeniser.vocab_size(), self.CONTEXT_SIZE, self.NUM_EMBEDDINGS, self.NUM_HEADS)
+        self.model = TransformerModel(self.tokeniser.vocab_size(), self.CONTEXT_SIZE, self.NUM_EMBEDDINGS, self.NUM_HEADS, self.NUM_BLOCKS)
         if filename is not None:
            self.model.load(filename)
            self.model.eval()
