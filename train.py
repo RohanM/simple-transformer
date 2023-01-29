@@ -19,7 +19,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--seed', type=int, default=1)
     parser.add_argument('--truncate-input', type=int, default=None)
     parser.add_argument('--context-size', type=int, default=8)
-    parser.add_argument('--embedding-dim', type=int, default=256)
+    parser.add_argument('--embedding-dim', type=int, default=32)
+    parser.add_argument('--num-heads', type=int, default=4)
     parser.add_argument('--lr', type=float, default=1e-3)
     parser.add_argument('--batch-size', type=int, default=64)
     parser.add_argument('--epochs', type=int, default=1000)
@@ -44,7 +45,7 @@ print(f'Preparing data...')
 data_train = Data(text_train, args.context_size)
 data_valid = Data(text_valid, args.context_size)
 
-model = TransformerModel(Tokeniser().vocab_size(), args.context_size, args.embedding_dim)
+model = TransformerModel(Tokeniser().vocab_size(), args.context_size, args.embedding_dim, args.num_heads)
 model = model.to(device)
 
 print('Training...')

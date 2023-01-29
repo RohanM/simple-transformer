@@ -9,12 +9,13 @@ class LM:
     tokeniser: Tokeniser
     model: TransformerModel
 
-    NUM_EMBEDDINGS = 256
+    NUM_EMBEDDINGS = 32
     CONTEXT_SIZE = 8
+    NUM_HEADS = 4
 
     def __init__(self, filename: Optional[str] = None) -> None:
         self.tokeniser = Tokeniser()
-        self.model = TransformerModel(self.tokeniser.vocab_size(), self.CONTEXT_SIZE, self.NUM_EMBEDDINGS)
+        self.model = TransformerModel(self.tokeniser.vocab_size(), self.CONTEXT_SIZE, self.NUM_EMBEDDINGS, self.NUM_HEADS)
         if filename is not None:
            self.model.load(filename)
            self.model.eval()
