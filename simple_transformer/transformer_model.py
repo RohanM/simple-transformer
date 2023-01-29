@@ -8,13 +8,15 @@ class Head(nn.Module):
     query: nn.Linear
     value: nn.Linear
     mask: Tensor
+    dropout: nn.Dropout
 
-    def __init__(self, context_size: int, num_embeddings: int, head_size: int) -> None:
+    def __init__(self, context_size: int, num_embeddings: int, head_size: int, dropout: float) -> None:
         super().__init__()
         self.key = nn.Linear(num_embeddings, head_size, bias=False)
         self.query = nn.Linear(num_embeddings, head_size, bias=False)
         self.value = nn.Linear(num_embeddings, head_size, bias=False)
         self.register_buffer('mask', torch.tril(torch.ones(context_size, context_size)))
+        self.dropout = nn.Dropout(dropout)
 
     def forward(self, x: Tensor) -> Tensor:
         b, t, c = x.shape
@@ -26,6 +28,7 @@ class Head(nn.Module):
         weights = q @ k.transpose(-2, -1) * c ** -0.5 # (b, t, c) @ (b, c, t) -> (b, t, t)
         weights = weights.masked_fill(self.mask[:t, :t] == 0, float('-inf')) # (b, t, t)
         weights = F.softmax(weights, dim=-1) # (b, t, t)
+        weights = self.dropout(weights) # (b, t, t)
         y = weights @ v # (b, t, t) @ (b, t, c) -> (b, t, c)
         return cast(Tensor, y)
 
@@ -34,9 +37,9 @@ class MultiHeadAttention(nn.Module):
     heads: nn.ModuleList
     proj: nn.Linear
 
-    def __init__(self, num_heads: int, context_size: int, num_embeddings: int, head_size: int) -> None:
+    def __init__(self, num_heads: int, context_size: int, num_embeddings: int, head_size: int, dropout: float) -> None:
         super().__init__()
-        self.heads = nn.ModuleList([Head(context_size, num_embeddings, head_size) for _ in range(num_heads)])
+        self.heads = nn.ModuleList([Head(context_size, num_embeddings, head_size, dropout) for _ in range(num_heads)])
         self.proj = nn.Linear(num_embeddings, num_embeddings)
 
     def forward(self, x: Tensor) -> Tensor:
@@ -48,13 +51,14 @@ class MultiHeadAttention(nn.Module):
 class FeedForward(nn.Module):
     net: nn.Sequential
 
-    def __init__(self, num_embeddings: int) -> None:
+    def __init__(self, num_embeddings: int, dropout: float) -> None:
         super().__init__()
         num_hidden = num_embeddings * 4
         self.net = nn.Sequential(
             nn.Linear(num_embeddings, num_hidden),
             nn.ReLU(),
             nn.Linear(num_hidden, num_embeddings),
+            nn.Dropout(dropout),
         )
 
     def forward(self, x: Tensor) -> Tensor:
@@ -66,17 +70,20 @@ class Block(nn.Module):
     feed_forward: FeedForward
     layer_norm1: nn.LayerNorm
     layer_norm2: nn.LayerNorm
+    dropout: nn.Dropout
 
-    def __init__(self, num_heads: int, context_size: int, num_embeddings: int) -> None:
+    def __init__(self, num_heads: int, context_size: int, num_embeddings: int, dropout: float) -> None:
         super().__init__()
-        self.attn_heads = MultiHeadAttention(num_heads, context_size, num_embeddings, num_embeddings // num_heads)
-        self.feed_forward = FeedForward(num_embeddings)
+        self.attn_heads = MultiHeadAttention(num_heads, context_size, num_embeddings, num_embeddings // num_heads, dropout)
+        self.feed_forward = FeedForward(num_embeddings, dropout)
         self.layer_norm1 = nn.LayerNorm(num_embeddings)
         self.layer_norm2 = nn.LayerNorm(num_embeddings)
+        self.dropout = nn.Dropout(dropout)
 
     def forward(self, x: Tensor) -> Tensor:
         x = x + self.attn_heads(self.layer_norm1(x))
         x = x + self.feed_forward(self.layer_norm2(x))
+        x = self.dropout(x)
         return x
 
 
@@ -87,11 +94,11 @@ class TransformerModel(nn.Module):
     layer_norm: nn.LayerNorm
     lm_head: nn.Linear
 
-    def __init__(self, vocab_size: int, context_size: int, num_embeddings: int, num_heads: int, num_blocks: int) -> None:
+    def __init__(self, vocab_size: int, context_size: int, num_embeddings: int, num_heads: int, num_blocks: int, dropout: float) -> None:
         super().__init__()
         self.token_embedding = nn.Embedding(vocab_size, num_embeddings)
         self.pos_embedding = nn.Embedding(context_size, num_embeddings)
-        self.blocks = nn.ModuleList([Block(num_heads, context_size, num_embeddings) for _ in range(num_blocks)])
+        self.blocks = nn.ModuleList([Block(num_heads, context_size, num_embeddings, dropout) for _ in range(num_blocks)])
         self.layer_norm = nn.LayerNorm(num_embeddings)
         self.lm_head = nn.Linear(num_embeddings, vocab_size)
 

@@ -16,7 +16,7 @@ class LM:
 
     def __init__(self, filename: Optional[str] = None) -> None:
         self.tokeniser = Tokeniser()
-        self.model = TransformerModel(self.tokeniser.vocab_size(), self.CONTEXT_SIZE, self.NUM_EMBEDDINGS, self.NUM_HEADS, self.NUM_BLOCKS)
+        self.model = TransformerModel(self.tokeniser.vocab_size(), self.CONTEXT_SIZE, self.NUM_EMBEDDINGS, self.NUM_HEADS, self.NUM_BLOCKS, 0)
         if filename is not None:
            self.model.load(filename)
            self.model.eval()
