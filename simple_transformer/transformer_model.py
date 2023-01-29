@@ -64,15 +64,19 @@ class FeedForward(nn.Module):
 class Block(nn.Module):
     attn_heads: MultiHeadAttention
     feed_forward: FeedForward
+    layer_norm1: nn.LayerNorm
+    layer_norm2: nn.LayerNorm
 
     def __init__(self, num_heads: int, context_size: int, num_embeddings: int) -> None:
         super().__init__()
         self.attn_heads = MultiHeadAttention(num_heads, context_size, num_embeddings, num_embeddings // num_heads)
         self.feed_forward = FeedForward(num_embeddings)
+        self.layer_norm1 = nn.LayerNorm(num_embeddings)
+        self.layer_norm2 = nn.LayerNorm(num_embeddings)
 
     def forward(self, x: Tensor) -> Tensor:
-        x = self.attn_heads(x) + x
-        x = self.feed_forward(x) + x
+        x = x + self.attn_heads(self.layer_norm1(x))
+        x = x + self.feed_forward(self.layer_norm2(x))
         return x
 
 
@@ -80,6 +84,7 @@ class TransformerModel(nn.Module):
     token_embedding: nn.Embedding
     pos_embedding: nn.Embedding
     blocks: nn.ModuleList
+    layer_norm: nn.LayerNorm
     lm_head: nn.Linear
 
     def __init__(self, vocab_size: int, context_size: int, num_embeddings: int, num_heads: int, num_blocks: int) -> None:
@@ -87,6 +92,7 @@ class TransformerModel(nn.Module):
         self.token_embedding = nn.Embedding(vocab_size, num_embeddings)
         self.pos_embedding = nn.Embedding(context_size, num_embeddings)
         self.blocks = nn.ModuleList([Block(num_heads, context_size, num_embeddings) for _ in range(num_blocks)])
+        self.layer_norm = nn.LayerNorm(num_embeddings)
         self.lm_head = nn.Linear(num_embeddings, vocab_size)
 
     def forward(self, x: Tensor, target: Optional[Tensor] = None) -> Tuple[Tensor, Optional[Tensor]]:
@@ -96,6 +102,7 @@ class TransformerModel(nn.Module):
         x = tok_emb + pos_emb
         for block in self.blocks:
             x = block(x)
+        x = self.layer_norm(x)
         logits = self.lm_head(x)
 
         loss = None
@@ -118,6 +125,7 @@ class TransformerModel(nn.Module):
             'token_embedding': self.token_embedding.state_dict(),
             'pos_embedding': self.pos_embedding.state_dict(),
             'blocks': self.blocks.state_dict(),
+            'layer_norm': self.layer_norm.state_dict(),
             'lm_head': self.lm_head.state_dict(),
         }
         torch.save(state, filename)
@@ -127,4 +135,5 @@ class TransformerModel(nn.Module):
         self.token_embedding.load_state_dict(state['token_embedding'])
         self.pos_embedding.load_state_dict(state['pos_embedding'])
         self.blocks.load_state_dict(state['blocks'])
+        self.layer_norm.load_state_dict(state['layer_norm'])
         self.lm_head.load_state_dict(state['lm_head'])
