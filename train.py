@@ -39,7 +39,7 @@ text = nltk.corpus.gutenberg.raw('austen-emma.txt')
 if args.truncate_input is not None:
     text = text[:args.truncate_input]
 
-split = int(len(text) * 0.8)
+split = int(len(text) * 0.9)
 text_train = text[:split]
 text_valid = text[split:]
 
