@@ -7,7 +7,7 @@ class BigramModel(nn.Module):
     embedding: nn.Embedding
 
     def __init__(self, num_embeddings: int) -> None:
-        super(BigramModel, self).__init__()
+        super().__init__()
         self.embedding = nn.Embedding(num_embeddings, num_embeddings)
 
     def forward(self, x: Tensor, target: Optional[Tensor] = None) -> Tuple[Tensor, Optional[Tensor]]:

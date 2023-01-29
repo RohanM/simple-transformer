@@ -10,7 +10,7 @@ class Head(nn.Module):
     mask: Tensor
 
     def __init__(self, context_size: int, num_embeddings: int, head_size: int) -> None:
-        super(Head, self).__init__()
+        super().__init__()
         self.key = nn.Linear(num_embeddings, head_size)
         self.query = nn.Linear(num_embeddings, head_size)
         self.value = nn.Linear(num_embeddings, head_size)
@@ -37,7 +37,7 @@ class TransformerModel(nn.Module):
     lm_head: nn.Linear
 
     def __init__(self, vocab_size: int, context_size: int, num_embeddings: int) -> None:
-        super(TransformerModel, self).__init__()
+        super().__init__()
         self.token_embedding = nn.Embedding(vocab_size, num_embeddings)
         self.pos_embedding = nn.Embedding(context_size, num_embeddings)
         self.attn_head = Head(context_size, num_embeddings, num_embeddings)
