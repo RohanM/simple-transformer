@@ -18,6 +18,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--tags', type=str, default=None)
     parser.add_argument('--seed', type=int, default=1)
     parser.add_argument('--truncate-input', type=int, default=None)
+    parser.add_argument('--train-eval-split', type=float, default=0.9)
     parser.add_argument('--context-size', type=int, default=8)
     parser.add_argument('--embedding-dim', type=int, default=32)
     parser.add_argument('--num-heads', type=int, default=4)
@@ -40,7 +41,7 @@ text = nltk.corpus.gutenberg.raw('austen-emma.txt')
 if args.truncate_input is not None:
     text = text[:args.truncate_input]
 
-split = int(len(text) * 0.9)
+split = int(len(text) * args.train_eval_split)
 text_train = text[:split]
 text_valid = text[split:]
 
