@@ -1,5 +1,5 @@
 import torch
-from torch import optim, Tensor
+from torch import optim, Tensor, tensor
 from torch.utils.data import DataLoader
 from simple_transformer.transformer_model import TransformerModel
 from simple_transformer.data import Data
@@ -26,20 +26,20 @@ class Trainer:
 
         self.model.train()
         for epoch in range(num_epochs):
-            losses = torch.zeros(self.eval_interval)
+            losses: list[Tensor] = []
             for i, (x, y) in enumerate(dl_train):
                 # -- Log and evaluate
                 if i % self.eval_interval == 0 and i > 0:
                     eval_loss = self.eval(dl_valid)
                     self.wandb.log({
-                        "loss/train": losses.mean(),
+                        "loss/train": tensor(losses).mean(),
                         "loss/valid": eval_loss,
                     })
-                    losses = torch.zeros(self.eval_interval)
+                    losses = []
 
                 # -- Train
                 loss = self.step(x, y)
-                losses[i % self.eval_interval] = loss
+                losses.append(loss)
 
     def step(self, x: Tensor, y: Tensor) -> Tensor:
         y_hat, loss = self.model(x, y)
@@ -51,9 +51,9 @@ class Trainer:
     @torch.no_grad() # type: ignore
     def eval(self, dl_valid: DataLoader[tuple[Tensor, Tensor]]) -> Tensor:
         self.model.eval()
-        losses = torch.zeros(len(dl_valid))
+        losses = []
         for i, (x, y) in enumerate(dl_valid):
             y_hat, loss = self.model(x, y)
-            losses[i] = loss.item()
+            losses.append(loss)
         self.model.train()
-        return losses.mean()
+        return tensor(losses).mean()
