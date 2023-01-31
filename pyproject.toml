@@ -9,7 +9,7 @@ packages = [{include = "simple_transformer"}]
 
 [tool.poetry.dependencies]
 python = "^3.9"
-torch = "1.12.1"
+torch = "1.13.1"
 numpy = "^1.23.5"
 nltk = "^3.8"
 wandb = "^0.13.6"
