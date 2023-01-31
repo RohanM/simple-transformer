@@ -31,12 +31,14 @@ class Trainer:
             for i, (x, y) in enumerate(dl_train):
                 # -- Log, evaluate, save checkpoint
                 if i % self.eval_interval == 0 and i > 0:
+                    train_loss = tensor(losses).mean()
                     eval_loss = self.eval(dl_valid)
                     self.wandb.log({
-                        "loss/train": tensor(losses).mean(),
+                        "loss/train": train_loss,
                         "loss/valid": eval_loss,
                     })
                     losses = []
+                    self.print_progress(epoch, i, num_epochs, len(dl_train), train_loss, eval_loss)
                     self.save_checkpoint(epoch, i)
 
                 # -- Train
@@ -63,3 +65,7 @@ class Trainer:
     def save_checkpoint(self, epoch: int, i: int) -> None:
         timestamp = time.strftime('%Y%m%d-%H%M')
         self.model.save(f'model-{timestamp}-{epoch}-{i}.pt')
+
+    def print_progress(self, epoch: int, i: int, num_epochs: int, data_len: int, train_loss: Tensor, eval_loss: Tensor) -> None:
+        progress = (epoch * data_len + i) / (num_epochs * data_len)
+        print(f'Epoch {epoch+1}/{num_epochs} step {i}/{data_len} ({progress:.2%}) - train loss: {train_loss:.4f} - eval loss: {eval_loss:.4f}')
