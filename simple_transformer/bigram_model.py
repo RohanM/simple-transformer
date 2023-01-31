@@ -32,5 +32,5 @@ class BigramModel(nn.Module):
         torch.save(state, filename)
 
     def load(self, filename: str = 'model.pt') -> None:
-        state = torch.load(filename) # type: ignore
+        state = torch.load(filename)
         self.embedding.load_state_dict(state['embedding'])

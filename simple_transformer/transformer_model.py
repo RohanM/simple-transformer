@@ -138,7 +138,7 @@ class TransformerModel(nn.Module):
         torch.save(state, filename)
 
     def load(self, filename: str = 'model.pt') -> None:
-        state = torch.load(filename) # type: ignore
+        state = torch.load(filename)
         self.token_embedding.load_state_dict(state['token_embedding'])
         self.pos_embedding.load_state_dict(state['pos_embedding'])
         self.blocks.load_state_dict(state['blocks'])
