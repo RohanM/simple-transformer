@@ -26,6 +26,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument('--lr', type=float, default=1e-3)
     parser.add_argument('--batch-size', type=int, default=64)
     parser.add_argument('--epochs', type=int, default=200)
+    parser.add_argument('--eval-interval', type=int, default=100)
     return parser.parse_args()
 
 args = parse_args()
@@ -72,7 +73,7 @@ wandb.init(
 )
 wandb.watch(model)
 
-trainer = Trainer(model, wandb, lr=args.lr, bs=args.batch_size)
+trainer = Trainer(model, wandb, lr=args.lr, bs=args.batch_size, eval_interval=args.eval_interval)
 trainer.train(args.epochs, data_train, data_valid)
 
 model.save('model.pt')
