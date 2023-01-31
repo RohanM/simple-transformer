@@ -1,3 +1,4 @@
+import time
 import torch
 from torch import optim, Tensor, tensor
 from torch.utils.data import DataLoader
@@ -28,7 +29,7 @@ class Trainer:
         for epoch in range(num_epochs):
             losses: list[Tensor] = []
             for i, (x, y) in enumerate(dl_train):
-                # -- Log and evaluate
+                # -- Log, evaluate, save checkpoint
                 if i % self.eval_interval == 0 and i > 0:
                     eval_loss = self.eval(dl_valid)
                     self.wandb.log({
@@ -36,6 +37,7 @@ class Trainer:
                         "loss/valid": eval_loss,
                     })
                     losses = []
+                    self.save_checkpoint(epoch, i)
 
                 # -- Train
                 loss = self.step(x, y)
@@ -57,3 +59,7 @@ class Trainer:
             losses.append(loss)
         self.model.train()
         return tensor(losses).mean()
+
+    def save_checkpoint(self, epoch: int, i: int) -> None:
+        timestamp = time.strftime('%Y%m%d-%H%M')
+        self.model.save(f'model-{timestamp}-{epoch}-{i}.pt')
